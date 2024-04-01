@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -23,11 +24,19 @@ public class AlumnoController {
     
     @Autowired
     private AlumnoDAOImplementation alumnoDAOImplementation;
+
     
-    @GetMapping
+    @GetMapping  //--Obtener/Mostrar una vista
     public String GetAll(Model model){
         List<Alumno> alumnos = alumnoDAOImplementation.GetAll();
         model.addAttribute("alumnos", alumnos);
         return "AlumnoGetAll";
     }
+    
+    @GetMapping("/form/{idalumno}")
+    public String Form(@PathVariable int idalumno, Model model){
+        model.addAttribute("alumno", new Alumno());
+        return "form";
+    }
+    
 }
