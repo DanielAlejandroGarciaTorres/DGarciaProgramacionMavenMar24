@@ -14,5 +14,5 @@ import java.util.List;
 public interface AlumnoDAO { // Contrato
     
     List<Alumno> GetAll(); // Metodo abstracto
-    
+    Boolean Add(Alumno alumno);
 }

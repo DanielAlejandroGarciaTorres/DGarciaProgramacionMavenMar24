@@ -48,4 +48,11 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
         });
     }
 
+    @Override
+    public Boolean Add(Alumno alumno) {
+       //Logica para ADD
+       //Query 
+       return true;
+    }
+
 }
