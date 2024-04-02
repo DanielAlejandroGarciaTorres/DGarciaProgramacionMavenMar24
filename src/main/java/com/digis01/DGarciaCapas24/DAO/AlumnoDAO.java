@@ -15,4 +15,5 @@ public interface AlumnoDAO { // Contrato
     
     List<Alumno> GetAll(); // Metodo abstracto
     Boolean Add(Alumno alumno);
+    Alumno GetById(int idAlumno);
 }

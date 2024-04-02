@@ -35,9 +35,17 @@ public class AlumnoController {
         return "AlumnoGetAll";
     }
     
+    //john carlos nancy mariano marco axel gerardo
     @GetMapping("/form/{idalumno}") //Muestra formulario vacio
     public String Form(@PathVariable int idalumno, Model model){
-        model.addAttribute("alumno", new Alumno());  //Mandamos un modelo vacio
+        
+        if (idalumno == 0) {
+            model.addAttribute("alumno", new Alumno());  //modelo vacio cuando hacemos un ADD
+        } else {
+            Alumno alumnoRecuperado = alumnoDAOImplementation.GetById(idalumno);
+            model.addAttribute("alumno", alumnoRecuperado);
+        }       
+        
         return "Form";
     }
     

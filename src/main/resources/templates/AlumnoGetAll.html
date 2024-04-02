@@ -12,6 +12,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </head>
     <body>
+        
+        <!--usuario.Nombre  -- > usuario.getUsuario() -->
+        
+        
         <h1 class='text-center'>Listado de Alumnos</h1>
         <br>
         <a th:href="@{/alumno/form/{idalumno}(idalumno=0)}" class="btn btn-success">Agregar</a>
@@ -19,12 +23,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <div class='container'>
             <table class='table table-responsive table-bordered'>
                 <thead class="table-dark">
-            <th>IdAlumno</th>
+                <th>Actualizar</th>
             <th>Nombre</th>
             </thead>
             <tbody>
                 <tr th:each="alumno: ${alumnos}">
-                    <td th:text="${alumno.IdAlumno}"></td>
+                    <td><a th:href="@{/alumno/form/{idalumno}(idalumno=${alumno.IdAlumno})}" class="btn btn-warning">Actualizar</a></td>
                     <td th:text="${alumno.Nombre}"></td>
                 </tr>
             </tbody>
