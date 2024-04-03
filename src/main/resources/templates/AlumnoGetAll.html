@@ -31,12 +31,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <th>Fecha Nacimiento</th>
                 </thead>
                 <tbody>
-                    <tr th:each="alumno: ${alumnos}">
-                        <td><a th:href="@{/alumno/form/{idalumno}(idalumno=${alumno.IdAlumno})}" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a></td>
-                        <td th:text="${alumno.Nombre} + ' ' + ${alumno.ApellidoPaterno}"></td>
-                        <td th:text="${alumno.UserName}"></td>
-                        <td th:text="${alumno.Rol.IdRol}"></td>
-                        <td th:text="${alumno.FechaNacimiento}"></td>
+                    <tr th:each="alumnoDireccion: ${alumnosDireccion}">
+                        <td><a th:href="@{/alumno/form/{idalumno}(idalumno=${alumnoDireccion.Alumno.IdAlumno})}" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a></td>
+                        <td th:text="${alumnoDireccion.Alumno.Nombre} + ' ' + ${alumnoDireccion.Alumno.ApellidoPaterno}"></td>
+                        <td th:text="${alumnoDireccion.Alumno.UserName}"></td>
+                        <td th:text="${alumnoDireccion.Alumno.Rol.IdRol}"></td>
+                        <td th:text="${alumnoDireccion.Alumno.FechaNacimiento}"></td>
                     </tr>
                 </tbody>
             </table>

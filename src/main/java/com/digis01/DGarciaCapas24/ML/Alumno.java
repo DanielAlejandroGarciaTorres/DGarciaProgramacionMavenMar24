@@ -7,6 +7,7 @@ package com.digis01.DGarciaCapas24.ML;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
+
 /**
  *
  * @author ALIEN 34
@@ -18,6 +19,7 @@ public class Alumno {
     private String ApellidoPaterno;
     private String UserName;
     public Rol Rol;
+    @DateTimeFormat( pattern = "YYYY-MM-DD")
     private Date FechaNacimiento;
 
     
@@ -80,7 +82,6 @@ public class Alumno {
         return FechaNacimiento;
     }
     
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public void setFechaNacimiento(Date FechaNacimiento) {
         this.FechaNacimiento = FechaNacimiento;
     }

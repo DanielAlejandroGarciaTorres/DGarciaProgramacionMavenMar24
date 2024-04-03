@@ -5,6 +5,8 @@
 package com.digis01.DGarciaCapas24.DAO;
 
 import com.digis01.DGarciaCapas24.ML.Alumno;
+import com.digis01.DGarciaCapas24.ML.AlumnoDireccion;
+import com.digis01.DGarciaCapas24.ML.Result;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -32,34 +34,44 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
     }
 
     @Override
-    public List<Alumno> GetAll() { // lo hagan con un sp getall
+    public Result GetAllSP() { // lo hagan con un sp getall
 //        String query = "SELECT IdAlumno, Nombre FROM Alumno";
 //        return jdbcTemplate.query(query, new AlumnoRowMapper());
-        return jdbcTemplate.execute("{CALL AlumnoGetAll(?)}", (CallableStatementCallback<List<Alumno>>) callableStatement -> {
-            callableStatement.registerOutParameter(1, Types.REF_CURSOR);
-            callableStatement.execute();
-            ResultSet rs = (ResultSet) callableStatement.getObject(1);
-            List<Alumno> alumnos = new ArrayList<>();
-            AlumnoRowMapper alumnoRowMapper = new AlumnoRowMapper();
-            while (rs.next()) {
-                alumnos.add(alumnoRowMapper.mapRow(rs, rs.getRow()));
-            }
-            return alumnos;
-        });
+        Result result = new Result();
+        try {
+            List<AlumnoDireccion> alumnosDirecciones = jdbcTemplate.execute("{CALL AlumnoGetAll(?)}", (CallableStatementCallback<List<AlumnoDireccion>>) callableStatement -> {
+                callableStatement.registerOutParameter(1, Types.REF_CURSOR);
+                callableStatement.execute();
+                ResultSet rs = (ResultSet) callableStatement.getObject(1);
+                List<AlumnoDireccion> alumnos = new ArrayList<>();
+                AlumnoRowMapper alumnoRowMapper = new AlumnoRowMapper();
+                while (rs.next()) { 
+                    alumnos.add(alumnoRowMapper.mapRow(rs, rs.getRow()));
+                }
+                return alumnos;
+            });
+            result.Object = alumnosDirecciones;
+            result.Correct = true;
+        } catch (Exception ex) {
+            result.Correct = false;
+            result.ErrorMessage = ex.getLocalizedMessage();
+            result.Ex = ex;
+        }
+        return result;
     }
 
-    @Override
-    public Boolean Add(Alumno alumno) {
-       //Logica para ADD
-       //Query 
-       return true;
-    }
+//    @Override
+//    public Boolean Add(Alumno alumno) {
+//        //Logica para ADD
+//        //Query 
+//        return true;
+//    }
+//    @Override
+//    public Alumno GetById(int idAlumno) {
+//        String query = "SELECT IdAlumno, Nombre, ApellidoPaterno, UserName, IdRol, FechaNacimiento FROM Alumno WHERE IdAlumno = " + idAlumno;
+//        Alumno alumno = jdbcTemplate.queryForObject(query, new AlumnoRowMapper());
+//        return alumno;
+//    }
 
-    @Override
-    public Alumno GetById(int idAlumno) {
-        String query = "SELECT IdAlumno, Nombre, ApellidoPaterno, UserName, IdRol, FechaNacimiento FROM Alumno WHERE IdAlumno = " + idAlumno;
-        Alumno alumno = jdbcTemplate.queryForObject(query, new AlumnoRowMapper());
-        return alumno;
-    }
-
+    
 }

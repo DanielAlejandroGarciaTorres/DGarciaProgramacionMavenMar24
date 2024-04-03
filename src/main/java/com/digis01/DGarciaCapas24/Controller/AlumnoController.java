@@ -6,6 +6,8 @@ package com.digis01.DGarciaCapas24.Controller;
 
 import com.digis01.DGarciaCapas24.DAO.AlumnoDAOImplementation;
 import com.digis01.DGarciaCapas24.ML.Alumno;
+import com.digis01.DGarciaCapas24.ML.AlumnoDireccion;
+import com.digis01.DGarciaCapas24.ML.Result;
 import com.digis01.DGarciaCapas24.ML.Rol;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +33,14 @@ public class AlumnoController {
     
     @GetMapping  //--Obtener/Mostrar una vista
     public String GetAll(Model model){
-        List<Alumno> alumnos = alumnoDAOImplementation.GetAll();
-        model.addAttribute("alumnos", alumnos);
-        return "AlumnoGetAll";
+        Result result = alumnoDAOImplementation.GetAllSP();
+        if (result.Correct) {
+            model.addAttribute("alumnosDireccion", (List<AlumnoDireccion>) result.Object);
+            return "AlumnoGetAll";
+        } else {
+            return "";
+        }
+        
     }
     
     //john carlos nancy mariano marco axel gerardo
@@ -45,8 +52,8 @@ public class AlumnoController {
             alumno.Rol  = new Rol();
             model.addAttribute("alumno", alumno);  //modelo vacio cuando hacemos un ADD
         } else {
-            Alumno alumnoRecuperado = alumnoDAOImplementation.GetById(idalumno);
-            model.addAttribute("alumno", alumnoRecuperado);
+           // Alumno alumnoRecuperado = alumnoDAOImplementation.GetById(idalumno);
+            //model.addAttribute("alumno", alumnoRecuperado);
         }       
         
         return "Form";
@@ -55,7 +62,7 @@ public class AlumnoController {
     @PostMapping("/form")  //Recuperar los datos de formulario
     public String Form(@ModelAttribute Alumno alumno){
         if (alumno.getIdAlumno() == 0) { // INSERTAR DATOS
-            alumnoDAOImplementation.Add(alumno);  //EL metodo de Add a la BD
+  //          alumnoDAOImplementation.Add(alumno);  //EL metodo de Add a la BD
         } else { //ACTUALIZACIÓN DE DATOS
 //            alumnoDAOImplementation.Update(alumno);
         }

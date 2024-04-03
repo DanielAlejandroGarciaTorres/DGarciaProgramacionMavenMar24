@@ -5,6 +5,7 @@
 package com.digis01.DGarciaCapas24.DAO;
 
 import com.digis01.DGarciaCapas24.ML.Alumno;
+import com.digis01.DGarciaCapas24.ML.Result;
 import java.util.List;
 
 /**
@@ -13,7 +14,9 @@ import java.util.List;
  */
 public interface AlumnoDAO { // Contrato
     
-    List<Alumno> GetAll(); // Metodo abstracto
-    Boolean Add(Alumno alumno);
-    Alumno GetById(int idAlumno);
+//    List<Alumno> GetAll(); // Metodo abstracto
+//    Boolean Add(Alumno alumno);
+//    Alumno GetById(int idAlumno);
+    // todo lo de sp trabja alumno dirección
+    Result GetAllSP();
 }
