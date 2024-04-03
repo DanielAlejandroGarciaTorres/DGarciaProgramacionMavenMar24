@@ -8,19 +8,63 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </head>
     <body>
         <div class="container">
             <form th:action="@{/alumno/form}" method="post" th:object="${alumno}">
-                <input type="text" placeholder="Nombre Alumno" id="NombreAlumno" th:field="*{Nombre}"/>
-                <input type="text" placeholder="Apellido Paterno" id="ApellidoPaternoAlumno" th:field="*{ApellidoPaterno}"/>
+                
+                <input type="hidden" th:field="*{IdAlumno}" />
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="NombreAlumno" class="form-label">Nombre</label>
+                        <div class="input-group ">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"></i></span>
+                            <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Nombre}">
+                        </div>     
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ApellidoPaternoAlumno" class="form-label">Apellido Paterno</label>
+                        <div class="input-group ">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"></i></span>
+                            <input id="ApellidoPaternoAlumno" type="text" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}">
+                        </div>     
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="UserNameAlumno" class="form-label">Username</label>
+                        <div class="input-group ">
+                            <span class="input-group-text" id="basic-addon1">@</span>
+                            <input id="UserNameAlumno" type="text" class="form-control" placeholder="Username"  th:field="*{UserName}">
+                        </div>     
+                    </div>
+                    <div class="col-md-4">
+                        <label for="FechaNacimientoAlumno" class="form-label">Fecha Nacimiento</label>
+                        <div class="input-group ">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"></i></span>
+                            <input id="FechaNacimientoAlumno" type="date" class="form-control" th:field="*{FechaNacimiento}">
+                        </div>     
+                    </div>
+                    <div class="col-md-4">
+                        <label for="RolAlumno" class="form-label">Rol</label>
+                        <div class="input-group ">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"></i></span>
+                            <input id="RolAlumno" type="text" class="form-control" placeholder="Rol" th:value="*{Rol.IdRol}">
+                        </div>     
+                    </div>
+                </div>
+                <button th:if="*{IdAlumno == 0 }" class="btn btn-success"> Agregar</button>
+                <button th:unless="*{IdAlumno == 0 }" class="btn btn-primary"> Actualizar</button>
+                
+                <!--operador ternario -- Condición ? verdadera : falsa  -->
+                <button th:text="*{IdAlumno == 0} ? 'Agregar' : 'Actualizar'" class="btn btn-success"></button>
+<!--                <button class="btn btn-primary" type="submit">Button</button>-->
 
-                <button class="btn btn-primary" type="submit">Button</button>
-                    
             </form>
-            
+
         </div>
     </body>
 </html>

@@ -57,9 +57,9 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
 
     @Override
     public Alumno GetById(int idAlumno) {
-        String query = "SELECT IdAlumno, Nombre, ApellidoPaterno, UserName FROM Alumno WHERE IdAlumno = " + idAlumno;
-        List<Alumno> alumnos = jdbcTemplate.query(query, new AlumnoRowMapper());
-        return alumnos.get(0);
+        String query = "SELECT IdAlumno, Nombre, ApellidoPaterno, UserName, IdRol, FechaNacimiento FROM Alumno WHERE IdAlumno = " + idAlumno;
+        Alumno alumno = jdbcTemplate.queryForObject(query, new AlumnoRowMapper());
+        return alumno;
     }
 
 }

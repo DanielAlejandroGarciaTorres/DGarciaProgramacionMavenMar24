@@ -5,11 +5,11 @@
 package com.digis01.DGarciaCapas24.DAO;
 
 import com.digis01.DGarciaCapas24.ML.Alumno;
+import com.digis01.DGarciaCapas24.ML.Rol;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
-
 /**
  *
  * @author ALIEN 34
@@ -23,6 +23,12 @@ public class AlumnoRowMapper implements RowMapper<Alumno> {
         Alumno alumno = new Alumno();
         alumno.setIdAlumno(rs.getInt("IdAlumno"));
         alumno.setNombre(rs.getString("Nombre"));
+        alumno.setApellidoPaterno(rs.getString("ApellidoPaterno"));
+        alumno.setUserName(rs.getString("UserName"));
+        alumno.Rol = new Rol();
+        alumno.Rol.setIdRol(rs.getInt("IdRol"));
+        alumno.setFechaNacimiento(rs.getDate("FechaNacimiento"));
+        
         
         return alumno;
     }

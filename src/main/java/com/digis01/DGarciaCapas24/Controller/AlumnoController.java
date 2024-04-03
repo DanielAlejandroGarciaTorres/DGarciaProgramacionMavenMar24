@@ -6,6 +6,7 @@ package com.digis01.DGarciaCapas24.Controller;
 
 import com.digis01.DGarciaCapas24.DAO.AlumnoDAOImplementation;
 import com.digis01.DGarciaCapas24.ML.Alumno;
+import com.digis01.DGarciaCapas24.ML.Rol;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,9 @@ public class AlumnoController {
     public String Form(@PathVariable int idalumno, Model model){
         
         if (idalumno == 0) {
-            model.addAttribute("alumno", new Alumno());  //modelo vacio cuando hacemos un ADD
+            Alumno alumno = new Alumno();
+            alumno.Rol  = new Rol();
+            model.addAttribute("alumno", alumno);  //modelo vacio cuando hacemos un ADD
         } else {
             Alumno alumnoRecuperado = alumnoDAOImplementation.GetById(idalumno);
             model.addAttribute("alumno", alumnoRecuperado);
@@ -51,7 +54,13 @@ public class AlumnoController {
     
     @PostMapping("/form")  //Recuperar los datos de formulario
     public String Form(@ModelAttribute Alumno alumno){
-        alumnoDAOImplementation.Add(alumno);  //EL metodo de Add a la BD
+        if (alumno.getIdAlumno() == 0) { // INSERTAR DATOS
+            alumnoDAOImplementation.Add(alumno);  //EL metodo de Add a la BD
+        } else { //ACTUALIZACIÓN DE DATOS
+//            alumnoDAOImplementation.Update(alumno);
+        }
+        
+        
         return "AlumnoGetAll";
     }
     
