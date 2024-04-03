@@ -33,6 +33,18 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    //    @Override
+//    public Boolean Add(Alumno alumno) {
+//        //Logica para ADD
+//        //Query 
+//        return true;
+//    }
+//    @Override
+//    public Alumno GetById(int idAlumno) {
+//        String query = "SELECT IdAlumno, Nombre, ApellidoPaterno, UserName, IdRol, FechaNacimiento FROM Alumno WHERE IdAlumno = " + idAlumno;
+//        Alumno alumno = jdbcTemplate.queryForObject(query, new AlumnoRowMapper());
+//        return alumno;
+//    }
     @Override
     public Result GetAllSP() { // lo hagan con un sp getall
 //        String query = "SELECT IdAlumno, Nombre FROM Alumno";
@@ -45,7 +57,7 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
                 ResultSet rs = (ResultSet) callableStatement.getObject(1);
                 List<AlumnoDireccion> alumnos = new ArrayList<>();
                 AlumnoRowMapper alumnoRowMapper = new AlumnoRowMapper();
-                while (rs.next()) { 
+                while (rs.next()) {
                     alumnos.add(alumnoRowMapper.mapRow(rs, rs.getRow()));
                 }
                 return alumnos;
@@ -60,18 +72,38 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
         return result;
     }
 
-//    @Override
-//    public Boolean Add(Alumno alumno) {
-//        //Logica para ADD
-//        //Query 
-//        return true;
-//    }
-//    @Override
-//    public Alumno GetById(int idAlumno) {
-//        String query = "SELECT IdAlumno, Nombre, ApellidoPaterno, UserName, IdRol, FechaNacimiento FROM Alumno WHERE IdAlumno = " + idAlumno;
-//        Alumno alumno = jdbcTemplate.queryForObject(query, new AlumnoRowMapper());
-//        return alumno;
-//    }
+    @Override
+    public Result AddSP(AlumnoDireccion alumnoDireccion) {
+        Result result = new Result();
 
-    
+        try {
+            int rowsAffected = jdbcTemplate.execute("{CALL AlumnoAdd(?, ?, ?, ?, ? , ?, ?, ?, ?, ? )}", (CallableStatementCallback<Integer>) callableStatement -> {
+                callableStatement.setString("pNombre", alumnoDireccion.Alumno.getNombre());
+                callableStatement.setString("pApellidoPaterno", alumnoDireccion.Alumno.getApellidoPaterno());
+                callableStatement.setString("pUserName", alumnoDireccion.Alumno.getUserName());
+                callableStatement.setInt("pIdRol", alumnoDireccion.Alumno.Rol.getIdRol());
+                java.sql.Date fechaNacimientoSql = new java.sql.Date(alumnoDireccion.Alumno.getFechaNacimiento().getTime());
+                callableStatement.setDate("pFechaNacimiento", fechaNacimientoSql);
+                callableStatement.setString("pCalle", alumnoDireccion.Direccion.getCalle());
+                callableStatement.setString("pNumeroInterior", alumnoDireccion.Direccion.getNumeroInterior());
+                callableStatement.setString("pNumeroExterior", alumnoDireccion.Direccion.getNumeroExterior());
+                callableStatement.setInt("pIdColonia", alumnoDireccion.Direccion.Colonia.getIdColonia());
+                callableStatement.registerOutParameter("IdRecuperado", Types.NUMERIC);
+
+                callableStatement.execute(); // ejecuta mi query
+                return callableStatement.getUpdateCount(); // 
+            });
+            
+            if(rowsAffected != 0) {
+                result.Correct = true;
+            }
+
+        } catch (Exception ex) {
+            result.Correct = false;
+            result.ErrorMessage = ex.getLocalizedMessage();
+            result.Ex = ex;
+        }
+        return result;
+    }
+
 }

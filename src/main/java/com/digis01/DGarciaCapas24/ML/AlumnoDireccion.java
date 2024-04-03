@@ -11,4 +11,24 @@ package com.digis01.DGarciaCapas24.ML;
 public class AlumnoDireccion {
     public Alumno Alumno;
     public Direccion Direccion;
+
+    
+    //Se agrean ya que el Thymeleaaf busca propiedades de lectura y escritura
+    public Alumno getAlumno() {
+        return Alumno;
+    }
+
+    public void setAlumno(Alumno Alumno) {
+        this.Alumno = Alumno;
+    }
+
+    public Direccion getDireccion() {
+        return Direccion;
+    }
+
+    public void setDireccion(Direccion Direccion) {
+        this.Direccion = Direccion;
+    }
+    
+    
 }

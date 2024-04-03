@@ -7,37 +7,35 @@ package com.digis01.DGarciaCapas24.ML;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
 /**
  *
  * @author ALIEN 34
  */
 public class Alumno {
-    
-    private int IdAlumno; 
+
+    private int IdAlumno;
     private String Nombre;
     private String ApellidoPaterno;
     private String UserName;
     public Rol Rol;
-    @DateTimeFormat( pattern = "YYYY-MM-DD")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
 
-    
-    public Alumno(){
-        
+    public Alumno() {
+
     }
-    
+
     public Alumno(String Nombre, String ApellidoPaterno) {
         this.Nombre = Nombre;
         this.ApellidoPaterno = ApellidoPaterno;
     }
-    
+
     public Alumno(int IdAlumno, String Nombre, String Apellido) {
         this.IdAlumno = IdAlumno;
         this.Nombre = Nombre;
         this.ApellidoPaterno = Apellido;
     }
-    
+
     public int getIdAlumno() {
         return IdAlumno;
     }
@@ -81,9 +79,17 @@ public class Alumno {
     public Date getFechaNacimiento() {
         return FechaNacimiento;
     }
-    
+
     public void setFechaNacimiento(Date FechaNacimiento) {
         this.FechaNacimiento = FechaNacimiento;
     }
+
     
+    public Rol getRol() {
+        return Rol;
+    }
+
+    public void setRol(Rol Rol) {
+        this.Rol = Rol;
+    }
 }

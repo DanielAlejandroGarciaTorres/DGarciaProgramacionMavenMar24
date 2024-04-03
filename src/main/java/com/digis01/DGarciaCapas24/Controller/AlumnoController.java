@@ -5,8 +5,11 @@
 package com.digis01.DGarciaCapas24.Controller;
 
 import com.digis01.DGarciaCapas24.DAO.AlumnoDAOImplementation;
+import com.digis01.DGarciaCapas24.DAO.RolDAOImplementation;
 import com.digis01.DGarciaCapas24.ML.Alumno;
 import com.digis01.DGarciaCapas24.ML.AlumnoDireccion;
+import com.digis01.DGarciaCapas24.ML.Colonia;
+import com.digis01.DGarciaCapas24.ML.Direccion;
 import com.digis01.DGarciaCapas24.ML.Result;
 import com.digis01.DGarciaCapas24.ML.Rol;
 import java.util.List;
@@ -29,6 +32,8 @@ public class AlumnoController {
     
     @Autowired
     private AlumnoDAOImplementation alumnoDAOImplementation;
+    @Autowired 
+    private RolDAOImplementation rolDAOImplementation;
 
     
     @GetMapping  //--Obtener/Mostrar una vista
@@ -47,10 +52,20 @@ public class AlumnoController {
     @GetMapping("/form/{idalumno}") //Muestra formulario vacio
     public String Form(@PathVariable int idalumno, Model model){
         
+        Result result = rolDAOImplementation.GetAll();
+        model.addAttribute("roles", (List<Rol>) result.Object);
+        
+//        model.addAttribute("roles", (List<Rol>) rolDAOImplementation.GetAll().Object);
+
+        
         if (idalumno == 0) {
-            Alumno alumno = new Alumno();
-            alumno.Rol  = new Rol();
-            model.addAttribute("alumno", alumno);  //modelo vacio cuando hacemos un ADD
+            AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
+            alumnoDireccion.Alumno = new Alumno();
+            alumnoDireccion.Alumno.Rol  = new Rol();
+            alumnoDireccion.Direccion = new Direccion();
+            alumnoDireccion.Direccion.Colonia = new Colonia();
+            
+            model.addAttribute("alumnoDireccion", alumnoDireccion);  //modelo vacio cuando hacemos un ADD
         } else {
            // Alumno alumnoRecuperado = alumnoDAOImplementation.GetById(idalumno);
             //model.addAttribute("alumno", alumnoRecuperado);
@@ -60,9 +75,12 @@ public class AlumnoController {
     }
     
     @PostMapping("/form")  //Recuperar los datos de formulario
-    public String Form(@ModelAttribute Alumno alumno){
-        if (alumno.getIdAlumno() == 0) { // INSERTAR DATOS
+    public String Form(@ModelAttribute AlumnoDireccion alumnoDireccion){
+        Result result;
+        if (alumnoDireccion.Alumno.getIdAlumno() == 0) { // INSERTAR DATOS
   //          alumnoDAOImplementation.Add(alumno);  //EL metodo de Add a la BD
+                result = alumnoDAOImplementation.AddSP(alumnoDireccion);
+            
         } else { //ACTUALIZACIÓN DE DATOS
 //            alumnoDAOImplementation.Update(alumno);
         }
