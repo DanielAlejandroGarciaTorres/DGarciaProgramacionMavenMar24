@@ -4,10 +4,18 @@
  */
 package com.digis01.DGarciaCapas24.DAO;
 
-import com.digis01.DGarciaCapas24.JPA.Alumno;
+import com.digis01.DGarciaCapas24.ML.Alumno;
 import com.digis01.DGarciaCapas24.ML.AlumnoDireccion;
+import com.digis01.DGarciaCapas24.ML.Colonia;
+import com.digis01.DGarciaCapas24.ML.Direccion;
+import com.digis01.DGarciaCapas24.ML.Estado;
+import com.digis01.DGarciaCapas24.ML.Municipio;
+import com.digis01.DGarciaCapas24.ML.Pais;
 import com.digis01.DGarciaCapas24.ML.Result;
+import com.digis01.DGarciaCapas24.ML.Rol;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -97,8 +105,8 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
                 callableStatement.execute(); // ejecuta mi query
                 return callableStatement.getUpdateCount(); // 
             });
-            
-            if(rowsAffected != 0) {
+
+            if (rowsAffected != 0) {
                 result.Correct = true;
             }
 
@@ -131,8 +139,8 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
                 callableStatement.execute(); // ejecuta mi query
                 return callableStatement.getUpdateCount(); // 
             });
-            
-            if(rowsAffected != 0) {
+
+            if (rowsAffected != 0) {
                 result.Correct = true;
             }
 
@@ -174,9 +182,112 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
     public Result GetAllJPA() {
         //JPQL
         Result result = new Result();
-        List<Alumno> alumnos = entityManager.createQuery("SELECT a FROM Alumno a", Alumno.class).getResultList();
-        Date fecha = alumnos.get(0).getFechaNacimiento();
-        result.Object = alumnos;
+        List<com.digis01.DGarciaCapas24.JPA.Alumno> alumnos = entityManager.createQuery("FROM Alumno", com.digis01.DGarciaCapas24.JPA.Alumno.class).getResultList();
+        List<AlumnoDireccion> alumnosDireccion = new ArrayList<>();
+
+        for (com.digis01.DGarciaCapas24.JPA.Alumno alumno : alumnos) {
+            AlumnoDireccion alumnoDireccion = new AlumnoDireccion();  // alumno dirección es de ML 
+            alumnoDireccion.Alumno = new Alumno();
+            alumnoDireccion.Alumno.setIdAlumno(alumno.getIdAlumno());
+            alumnoDireccion.Alumno.setNombre(alumno.getNombre());
+            alumnoDireccion.Alumno.setApellidoPaterno(alumno.getApellidoPaterno());
+            alumnoDireccion.Alumno.setUserName(alumno.getUserName());
+            alumnoDireccion.Alumno.setFechaNacimiento(alumno.getFechaNacimiento());
+            alumnoDireccion.Alumno.Rol = new Rol();
+            alumnoDireccion.Alumno.Rol.setIdRol(alumno.Rol.getIdRol());
+
+            TypedQuery<com.digis01.DGarciaCapas24.JPA.Direccion> query = entityManager.createQuery("FROM Direccion WHERE Alumno.IdAlumno =: idAlumno", com.digis01.DGarciaCapas24.JPA.Direccion.class);
+            query.setParameter("idAlumno", alumno.getIdAlumno());
+
+            try {
+                com.digis01.DGarciaCapas24.JPA.Direccion direccion = query.getSingleResult();
+                alumnoDireccion.Direccion = new Direccion();
+                alumnoDireccion.Direccion.setIdDIreccion(direccion.getIdDireccion());
+                alumnoDireccion.Direccion.setCalle(direccion.getCalle());
+                alumnoDireccion.Direccion.setNumeroInterior(direccion.getNumeroInterior());
+                alumnoDireccion.Direccion.setNumeroExterior(direccion.getNumeroExterior());
+                alumnoDireccion.Direccion.Colonia = new Colonia();
+                alumnoDireccion.Direccion.Colonia.setIdColonia(direccion.Colonia.getIdColonia());
+                alumnoDireccion.Direccion.Colonia.setNombre(direccion.Colonia.getNombre());
+                alumnoDireccion.Direccion.Colonia.Municipio = new Municipio();
+                alumnoDireccion.Direccion.Colonia.Municipio.setIdMunicipio(direccion.Colonia.Municipio.getIdMunicipio());
+                alumnoDireccion.Direccion.Colonia.Municipio.setNombre(direccion.Colonia.Municipio.getNombre());
+                alumnoDireccion.Direccion.Colonia.Municipio.Estado = new Estado();
+                alumnoDireccion.Direccion.Colonia.Municipio.Estado.setIdEstado(direccion.Colonia.Municipio.Estado.getIdEstado());
+                alumnoDireccion.Direccion.Colonia.Municipio.Estado.setNombre(direccion.Colonia.Municipio.Estado.getNombre());
+                alumnoDireccion.Direccion.Colonia.Municipio.Estado.Pais = new Pais();
+                alumnoDireccion.Direccion.Colonia.Municipio.Estado.Pais.setIdPais(direccion.Colonia.Municipio.Estado.Pais.getIdPais());
+                alumnoDireccion.Direccion.Colonia.Municipio.Estado.Pais.setNombre(direccion.Colonia.Municipio.Estado.Pais.getNombre());
+            } catch (Exception ex) {
+                continue;
+            } finally {
+                  alumnosDireccion.add(alumnoDireccion);
+            }
+       
+        }
+        result.Correct = true;
+        result.Object = alumnosDireccion;
+
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Result AddJPA(AlumnoDireccion alumnoDireccion) {
+        Result result = new Result();
+        
+        com.digis01.DGarciaCapas24.JPA.Alumno alumno = new com.digis01.DGarciaCapas24.JPA.Alumno();
+        alumno.setNombre(alumnoDireccion.Alumno.getNombre());
+        alumno.setApellidoPaterno(alumnoDireccion.Alumno.getApellidoPaterno());
+        alumno.setUserName(alumnoDireccion.Alumno.getUserName());
+        alumno.Rol = new com.digis01.DGarciaCapas24.JPA.Rol();
+        alumno.Rol.setIdRol(alumnoDireccion.Alumno.Rol.getIdRol());
+        alumno.setFechaNacimiento(alumnoDireccion.Alumno.getFechaNacimiento());
+        
+        entityManager.persist(alumno);
+        
+        com.digis01.DGarciaCapas24.JPA.Direccion direccion = new com.digis01.DGarciaCapas24.JPA.Direccion();
+        direccion.setCalle(alumnoDireccion.Direccion.getCalle());
+        direccion.setNumeroInterior(alumnoDireccion.Direccion.getNumeroInterior());
+        direccion.setNumeroExterior(alumnoDireccion.Direccion.getNumeroExterior());
+        direccion.Colonia = new com.digis01.DGarciaCapas24.JPA.Colonia();
+        direccion.Colonia.setIdColonia(alumnoDireccion.Direccion.Colonia.getIdColonia());
+        direccion.Alumno = new com.digis01.DGarciaCapas24.JPA.Alumno();
+        direccion.Alumno.setIdAlumno(alumno.getIdAlumno());
+        
+        entityManager.persist(direccion);
+        
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Result UpdateJPA(AlumnoDireccion alumnoDireccion) {
+        Result result = new Result();
+        
+        com.digis01.DGarciaCapas24.JPA.Alumno alumno = new com.digis01.DGarciaCapas24.JPA.Alumno();
+        alumno.setIdAlumno(alumnoDireccion.Alumno.getIdAlumno());
+        alumno.setNombre(alumnoDireccion.Alumno.getNombre());
+        alumno.setApellidoPaterno(alumnoDireccion.Alumno.getApellidoPaterno());
+        alumno.setUserName(alumnoDireccion.Alumno.getUserName());
+        alumno.Rol = new com.digis01.DGarciaCapas24.JPA.Rol();
+        alumno.Rol.setIdRol(alumnoDireccion.Alumno.Rol.getIdRol());
+        alumno.setFechaNacimiento(alumnoDireccion.Alumno.getFechaNacimiento());
+        
+        entityManager.merge(alumno); // actualiza los datos
+        
+        com.digis01.DGarciaCapas24.JPA.Direccion direccion = new com.digis01.DGarciaCapas24.JPA.Direccion();
+        direccion.setCalle(alumnoDireccion.Direccion.getCalle());
+        direccion.setNumeroInterior(alumnoDireccion.Direccion.getNumeroInterior());
+        direccion.setNumeroExterior(alumnoDireccion.Direccion.getNumeroExterior());
+        direccion.Colonia = new com.digis01.DGarciaCapas24.JPA.Colonia();
+        direccion.Colonia.setIdColonia(alumnoDireccion.Direccion.Colonia.getIdColonia());
+        direccion.Alumno = new com.digis01.DGarciaCapas24.JPA.Alumno();
+        direccion.Alumno.setIdAlumno(alumno.getIdAlumno());
+        
+        entityManager.persist(direccion);
+        
+        
         return result;
     }
 

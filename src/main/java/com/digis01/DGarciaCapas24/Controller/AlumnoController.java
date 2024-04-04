@@ -37,8 +37,8 @@ public class AlumnoController {
 
     @GetMapping  //--Obtener/Mostrar una vista
     public String GetAll(Model model) {
-        Result result = alumnoDAOImplementation.GetAllSP();
-        Result result2 = alumnoDAOImplementation.GetAllJPA();
+//        Result result = alumnoDAOImplementation.GetAllSP();
+        Result result = alumnoDAOImplementation.GetAllJPA();
         if (result.Correct) {
             model.addAttribute("alumnosDireccion", (List<AlumnoDireccion>) result.Object);
             return "AlumnoGetAll";
@@ -79,7 +79,8 @@ public class AlumnoController {
         Result result;
         if (alumnoDireccion.Alumno.getIdAlumno() == 0) { // INSERTAR DATOS
             //          alumnoDAOImplementation.Add(alumno);  //EL metodo de Add a la BD
-            result = alumnoDAOImplementation.AddSP(alumnoDireccion);
+//            result = alumnoDAOImplementation.AddSP(alumnoDireccion);
+            result = alumnoDAOImplementation.AddJPA(alumnoDireccion);
 
         } else { //ACTUALIZACIÓN DE DATOS
             result = alumnoDAOImplementation.UpdateSP(alumnoDireccion);
