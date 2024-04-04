@@ -4,12 +4,14 @@
  */
 package com.digis01.DGarciaCapas24.DAO;
 
-import com.digis01.DGarciaCapas24.ML.Alumno;
+import com.digis01.DGarciaCapas24.JPA.Alumno;
 import com.digis01.DGarciaCapas24.ML.AlumnoDireccion;
 import com.digis01.DGarciaCapas24.ML.Result;
+import jakarta.persistence.EntityManager;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -27,10 +29,12 @@ import org.springframework.stereotype.Repository;
 public class AlumnoDAOImplementation implements AlumnoDAO {
 
     private JdbcTemplate jdbcTemplate; // de encarga de recupera y/o enviar datos a nuestra bd
+    private EntityManager entityManager; // me permitetrabajar con JPA
 
     @Autowired //inyección 
-    public AlumnoDAOImplementation(DataSource dataSource) {
+    public AlumnoDAOImplementation(DataSource dataSource, EntityManager entityManager) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.entityManager = entityManager;
     }
 
     //    @Override
@@ -103,6 +107,76 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
             result.ErrorMessage = ex.getLocalizedMessage();
             result.Ex = ex;
         }
+        return result;
+    }
+
+    @Override
+    public Result UpdateSP(AlumnoDireccion alumnoDireccion) {
+        Result result = new Result();
+
+        try {
+            int rowsAffected = jdbcTemplate.execute("{CALL AlumnoUpdate(?, ?, ?, ?, ? , ?, ?, ?, ?, ? )}", (CallableStatementCallback<Integer>) callableStatement -> {
+                callableStatement.setInt("pIdAlumno", alumnoDireccion.Alumno.getIdAlumno());
+                callableStatement.setString("pNombre", alumnoDireccion.Alumno.getNombre());
+                callableStatement.setString("pApellidoPaterno", alumnoDireccion.Alumno.getApellidoPaterno());
+                callableStatement.setString("pUserName", alumnoDireccion.Alumno.getUserName());
+                callableStatement.setInt("pIdRol", alumnoDireccion.Alumno.Rol.getIdRol());
+                java.sql.Date fechaNacimientoSql = new java.sql.Date(alumnoDireccion.Alumno.getFechaNacimiento().getTime());
+                callableStatement.setDate("pFechaNacimiento", fechaNacimientoSql);
+                callableStatement.setString("pCalle", alumnoDireccion.Direccion.getCalle());
+                callableStatement.setString("pNumeroInterior", alumnoDireccion.Direccion.getNumeroInterior());
+                callableStatement.setString("pNumeroExterior", alumnoDireccion.Direccion.getNumeroExterior());
+                callableStatement.setInt("pIdColonia", alumnoDireccion.Direccion.Colonia.getIdColonia());
+
+                callableStatement.execute(); // ejecuta mi query
+                return callableStatement.getUpdateCount(); // 
+            });
+            
+            if(rowsAffected != 0) {
+                result.Correct = true;
+            }
+
+        } catch (Exception ex) {
+            result.Correct = false;
+            result.ErrorMessage = ex.getLocalizedMessage();
+            result.Ex = ex;
+        }
+        return result;
+    }
+
+    @Override
+    public Result GetByIdSP(int idAlumno) {
+        Result result = new Result();
+        try {
+            AlumnoDireccion alumnoDireccion = jdbcTemplate.execute("{CALL AlumnoGetById(?,?)}", (CallableStatementCallback<AlumnoDireccion>) callableStatement -> {
+                callableStatement.setInt("pIdAlumno", idAlumno);
+                callableStatement.registerOutParameter("datosCursor", Types.REF_CURSOR);
+                callableStatement.execute();
+                ResultSet rs = (ResultSet) callableStatement.getObject("datosCursor");
+                AlumnoRowMapper alumnoRowMapper = new AlumnoRowMapper();
+                if (rs.next()) {
+                    return alumnoRowMapper.mapRow(rs, rs.getRow());
+                } else {
+                    return null;
+                }
+            });
+            result.Object = alumnoDireccion;
+            result.Correct = true;
+        } catch (Exception ex) {
+            result.Correct = false;
+            result.ErrorMessage = ex.getLocalizedMessage();
+            result.Ex = ex;
+        }
+        return result;
+    }
+
+    @Override
+    public Result GetAllJPA() {
+        //JPQL
+        Result result = new Result();
+        List<Alumno> alumnos = entityManager.createQuery("SELECT a FROM Alumno a", Alumno.class).getResultList();
+        Date fecha = alumnos.get(0).getFechaNacimiento();
+        result.Object = alumnos;
         return result;
     }
 

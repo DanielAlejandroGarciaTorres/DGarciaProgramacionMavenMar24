@@ -29,64 +29,64 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/alumno")
 public class AlumnoController {
-    
+
     @Autowired
     private AlumnoDAOImplementation alumnoDAOImplementation;
-    @Autowired 
+    @Autowired
     private RolDAOImplementation rolDAOImplementation;
 
-    
     @GetMapping  //--Obtener/Mostrar una vista
-    public String GetAll(Model model){
+    public String GetAll(Model model) {
         Result result = alumnoDAOImplementation.GetAllSP();
+        Result result2 = alumnoDAOImplementation.GetAllJPA();
         if (result.Correct) {
             model.addAttribute("alumnosDireccion", (List<AlumnoDireccion>) result.Object);
             return "AlumnoGetAll";
         } else {
             return "";
         }
-        
+
     }
-    
+
     //john carlos nancy mariano marco axel gerardo
     @GetMapping("/form/{idalumno}") //Muestra formulario vacio
-    public String Form(@PathVariable int idalumno, Model model){
-        
+    public String Form(@PathVariable int idalumno, Model model) {
+
         Result result = rolDAOImplementation.GetAll();
         model.addAttribute("roles", (List<Rol>) result.Object);
-        
-//        model.addAttribute("roles", (List<Rol>) rolDAOImplementation.GetAll().Object);
 
-        
+//        model.addAttribute("roles", (List<Rol>) rolDAOImplementation.GetAll().Object);
         if (idalumno == 0) {
             AlumnoDireccion alumnoDireccion = new AlumnoDireccion();
             alumnoDireccion.Alumno = new Alumno();
-            alumnoDireccion.Alumno.Rol  = new Rol();
+            alumnoDireccion.Alumno.Rol = new Rol();
             alumnoDireccion.Direccion = new Direccion();
             alumnoDireccion.Direccion.Colonia = new Colonia();
-            
+
             model.addAttribute("alumnoDireccion", alumnoDireccion);  //modelo vacio cuando hacemos un ADD
         } else {
-           // Alumno alumnoRecuperado = alumnoDAOImplementation.GetById(idalumno);
+            // Alumno alumnoRecuperado = alumnoDAOImplementation.GetById(idalumno);
             //model.addAttribute("alumno", alumnoRecuperado);
-        }       
-        
+            AlumnoDireccion alumnoDireccion = (AlumnoDireccion) alumnoDAOImplementation.GetByIdSP(idalumno).Object;
+            model.addAttribute("alumnoDireccion", alumnoDireccion);
+        }
+
         return "Form";
     }
-    
+
     @PostMapping("/form")  //Recuperar los datos de formulario
-    public String Form(@ModelAttribute AlumnoDireccion alumnoDireccion){
+    public String Form(@ModelAttribute AlumnoDireccion alumnoDireccion) {
         Result result;
         if (alumnoDireccion.Alumno.getIdAlumno() == 0) { // INSERTAR DATOS
-  //          alumnoDAOImplementation.Add(alumno);  //EL metodo de Add a la BD
-                result = alumnoDAOImplementation.AddSP(alumnoDireccion);
-            
+            //          alumnoDAOImplementation.Add(alumno);  //EL metodo de Add a la BD
+            result = alumnoDAOImplementation.AddSP(alumnoDireccion);
+
         } else { //ACTUALIZACIÓN DE DATOS
+            result = alumnoDAOImplementation.UpdateSP(alumnoDireccion);
 //            alumnoDAOImplementation.Update(alumno);
         }
-        
-        
+
         return "AlumnoGetAll";
     }
-    
+
 }

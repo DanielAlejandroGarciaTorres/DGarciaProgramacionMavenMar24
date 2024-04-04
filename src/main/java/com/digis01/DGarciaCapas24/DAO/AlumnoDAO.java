@@ -20,4 +20,8 @@ public interface AlumnoDAO { // Contrato
     // todo lo de sp trabja alumno dirección
     Result GetAllSP();
     Result AddSP(AlumnoDireccion alumnoDirccion);
+    Result UpdateSP(AlumnoDireccion alumnoDireccion);
+    Result GetByIdSP(int idAlumno);
+    
+    Result GetAllJPA();
 }
