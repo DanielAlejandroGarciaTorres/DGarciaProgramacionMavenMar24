@@ -28,6 +28,15 @@ public class Colonia {
     public void setNombre(String Nombre) {
         this.Nombre = Nombre;
     }
+
+    public Municipio getMunicipio() {
+        return Municipio;
+    }
+
+    public void setMunicipio(Municipio Municipio) {
+        this.Municipio = Municipio;
+    }
+    
     
     
 }

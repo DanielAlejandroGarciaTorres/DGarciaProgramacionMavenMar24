@@ -5,11 +5,15 @@
 package com.digis01.DGarciaCapas24.Controller;
 
 import com.digis01.DGarciaCapas24.DAO.AlumnoDAOImplementation;
+import com.digis01.DGarciaCapas24.DAO.EstadoDAOImplementation;
+import com.digis01.DGarciaCapas24.DAO.PaisDAOImplementation;
 import com.digis01.DGarciaCapas24.DAO.RolDAOImplementation;
 import com.digis01.DGarciaCapas24.ML.Alumno;
 import com.digis01.DGarciaCapas24.ML.AlumnoDireccion;
 import com.digis01.DGarciaCapas24.ML.Colonia;
 import com.digis01.DGarciaCapas24.ML.Direccion;
+import com.digis01.DGarciaCapas24.ML.Estado;
+import com.digis01.DGarciaCapas24.ML.Pais;
 import com.digis01.DGarciaCapas24.ML.Result;
 import com.digis01.DGarciaCapas24.ML.Rol;
 import java.util.List;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -34,6 +40,10 @@ public class AlumnoController {
     private AlumnoDAOImplementation alumnoDAOImplementation;
     @Autowired
     private RolDAOImplementation rolDAOImplementation;
+    @Autowired
+    private PaisDAOImplementation paisDaoImplentation;
+    @Autowired
+    private EstadoDAOImplementation estadoDAOImplementation;
 
     @GetMapping  //--Obtener/Mostrar una vista
     public String GetAll(Model model) {
@@ -54,6 +64,7 @@ public class AlumnoController {
 
         Result result = rolDAOImplementation.GetAll();
         model.addAttribute("roles", (List<Rol>) result.Object);
+        model.addAttribute("paises", (List<Pais>) paisDaoImplentation.GetAll().Object);
 
 //        model.addAttribute("roles", (List<Rol>) rolDAOImplementation.GetAll().Object);
         if (idalumno == 0) {
@@ -90,4 +101,10 @@ public class AlumnoController {
         return "AlumnoGetAll";
     }
 
+    @GetMapping("/getEstadoByPais")
+    @ResponseBody
+    public List<Estado> GetEstadoBtPais(@RequestParam("IdPais") int IdPais){
+        List<Estado> estados = (List<Estado>) estadoDAOImplementation.GetByPais(IdPais).Object;
+        return estados;
+    }
 }
