@@ -29,6 +29,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <th>Username</th>
                     <th>Rol</th>
                     <th>Fecha Nacimiento</th>
+                    <th>Dirección</th>
                 </thead>
                 <tbody>
                     <tr th:each="alumnoDireccion: ${alumnosDireccion}">
@@ -37,6 +38,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <td th:text="${alumnoDireccion.Alumno.UserName}"></td>
                         <td th:text="${alumnoDireccion.Alumno.Rol.IdRol}"></td>
                         <td th:text="${alumnoDireccion.Alumno.FechaNacimiento}"></td>
+                        <td th:text="${alumnoDireccion.Direccion?.Colonia?.Municipio?.Estado?.Pais?.Nombre != null ? alumnoDireccion.Direccion?.Colonia?.Municipio?.Estado?.Pais?.Nombre + ', ' : ''}  
+                            + ${alumnoDireccion.Direccion?.Colonia?.Municipio?.Estado?.Nombre != null ? alumnoDireccion.Direccion?.Colonia?.Municipio?.Estado?.Nombre + ', ' : ''}"></td>
                     </tr>
                 </tbody>
             </table>

@@ -26,4 +26,5 @@ public interface AlumnoDAO { // Contrato
     Result GetAllJPA();
     Result AddJPA(AlumnoDireccion alumnoDireccion);
     Result UpdateJPA(AlumnoDireccion alumnoDireccion);
+    Result GetByIdJPA(int idAlumno);
 }

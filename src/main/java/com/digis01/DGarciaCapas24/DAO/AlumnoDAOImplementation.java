@@ -221,9 +221,9 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
             } catch (Exception ex) {
                 continue;
             } finally {
-                  alumnosDireccion.add(alumnoDireccion);
+                alumnosDireccion.add(alumnoDireccion);
             }
-       
+
         }
         result.Correct = true;
         result.Object = alumnosDireccion;
@@ -235,7 +235,7 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
     @Transactional
     public Result AddJPA(AlumnoDireccion alumnoDireccion) {
         Result result = new Result();
-        
+
         com.digis01.DGarciaCapas24.JPA.Alumno alumno = new com.digis01.DGarciaCapas24.JPA.Alumno();
         alumno.setNombre(alumnoDireccion.Alumno.getNombre());
         alumno.setApellidoPaterno(alumnoDireccion.Alumno.getApellidoPaterno());
@@ -243,9 +243,9 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
         alumno.Rol = new com.digis01.DGarciaCapas24.JPA.Rol();
         alumno.Rol.setIdRol(alumnoDireccion.Alumno.Rol.getIdRol());
         alumno.setFechaNacimiento(alumnoDireccion.Alumno.getFechaNacimiento());
-        
+
         entityManager.persist(alumno);
-        
+
         com.digis01.DGarciaCapas24.JPA.Direccion direccion = new com.digis01.DGarciaCapas24.JPA.Direccion();
         direccion.setCalle(alumnoDireccion.Direccion.getCalle());
         direccion.setNumeroInterior(alumnoDireccion.Direccion.getNumeroInterior());
@@ -254,9 +254,9 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
         direccion.Colonia.setIdColonia(alumnoDireccion.Direccion.Colonia.getIdColonia());
         direccion.Alumno = new com.digis01.DGarciaCapas24.JPA.Alumno();
         direccion.Alumno.setIdAlumno(alumno.getIdAlumno());
-        
+
         entityManager.persist(direccion);
-        
+
         return result;
     }
 
@@ -264,7 +264,7 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
     @Transactional
     public Result UpdateJPA(AlumnoDireccion alumnoDireccion) {
         Result result = new Result();
-        
+
         com.digis01.DGarciaCapas24.JPA.Alumno alumno = new com.digis01.DGarciaCapas24.JPA.Alumno();
         alumno.setIdAlumno(alumnoDireccion.Alumno.getIdAlumno());
         alumno.setNombre(alumnoDireccion.Alumno.getNombre());
@@ -273,9 +273,9 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
         alumno.Rol = new com.digis01.DGarciaCapas24.JPA.Rol();
         alumno.Rol.setIdRol(alumnoDireccion.Alumno.Rol.getIdRol());
         alumno.setFechaNacimiento(alumnoDireccion.Alumno.getFechaNacimiento());
-        
+
         entityManager.merge(alumno); // actualiza los datos
-        
+
         com.digis01.DGarciaCapas24.JPA.Direccion direccion = new com.digis01.DGarciaCapas24.JPA.Direccion();
         direccion.setCalle(alumnoDireccion.Direccion.getCalle());
         direccion.setNumeroInterior(alumnoDireccion.Direccion.getNumeroInterior());
@@ -284,11 +284,58 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
         direccion.Colonia.setIdColonia(alumnoDireccion.Direccion.Colonia.getIdColonia());
         direccion.Alumno = new com.digis01.DGarciaCapas24.JPA.Alumno();
         direccion.Alumno.setIdAlumno(alumno.getIdAlumno());
-        
+
         entityManager.persist(direccion);
-        
-        
+
         return result;
     }
 
+    @Override
+    public Result GetByIdJPA(int idAlumno) {
+        Result result = new Result();
+        TypedQuery<com.digis01.DGarciaCapas24.JPA.Alumno> query = entityManager.createQuery("FROM Alumno WHERE IdAlumno =: idAlumno", com.digis01.DGarciaCapas24.JPA.Alumno.class);
+        query.setParameter("idAlumno", idAlumno);
+        com.digis01.DGarciaCapas24.JPA.Alumno alumnoJPA = query.getSingleResult();
+        
+        AlumnoDireccion alumnoDireccion = new AlumnoDireccion();  // alumno dirección es de ML 
+        alumnoDireccion.Alumno = new Alumno();
+        alumnoDireccion.Alumno.setIdAlumno(alumnoJPA.getIdAlumno());
+        alumnoDireccion.Alumno.setNombre(alumnoJPA.getNombre());
+        alumnoDireccion.Alumno.setApellidoPaterno(alumnoJPA.getApellidoPaterno());
+        alumnoDireccion.Alumno.setUserName(alumnoJPA.getUserName());
+        alumnoDireccion.Alumno.setFechaNacimiento(alumnoJPA.getFechaNacimiento());
+        alumnoDireccion.Alumno.Rol = new Rol();
+        alumnoDireccion.Alumno.Rol.setIdRol(alumnoJPA.Rol.getIdRol());
+
+        TypedQuery<com.digis01.DGarciaCapas24.JPA.Direccion> queryDireccion = entityManager.createQuery("FROM Direccion WHERE Alumno.IdAlumno =: idAlumno", com.digis01.DGarciaCapas24.JPA.Direccion.class);
+        queryDireccion.setParameter("idAlumno",idAlumno);
+
+        try {
+            com.digis01.DGarciaCapas24.JPA.Direccion direccionJPA = queryDireccion.getSingleResult();
+            alumnoDireccion.Direccion = new Direccion();
+            alumnoDireccion.Direccion.setIdDIreccion(direccionJPA.getIdDireccion());
+            alumnoDireccion.Direccion.setCalle(direccionJPA.getCalle());
+            alumnoDireccion.Direccion.setNumeroInterior(direccionJPA.getNumeroInterior());
+            alumnoDireccion.Direccion.setNumeroExterior(direccionJPA.getNumeroExterior());
+            alumnoDireccion.Direccion.Colonia = new Colonia();
+            alumnoDireccion.Direccion.Colonia.setIdColonia(direccionJPA.Colonia.getIdColonia());
+            alumnoDireccion.Direccion.Colonia.setNombre(direccionJPA.Colonia.getNombre());
+            alumnoDireccion.Direccion.Colonia.Municipio = new Municipio();
+            alumnoDireccion.Direccion.Colonia.Municipio.setIdMunicipio(direccionJPA.Colonia.Municipio.getIdMunicipio());
+            alumnoDireccion.Direccion.Colonia.Municipio.setNombre(direccionJPA.Colonia.Municipio.getNombre());
+            alumnoDireccion.Direccion.Colonia.Municipio.Estado = new Estado();
+            alumnoDireccion.Direccion.Colonia.Municipio.Estado.setIdEstado(direccionJPA.Colonia.Municipio.Estado.getIdEstado());
+            alumnoDireccion.Direccion.Colonia.Municipio.Estado.setNombre(direccionJPA.Colonia.Municipio.Estado.getNombre());
+            alumnoDireccion.Direccion.Colonia.Municipio.Estado.Pais = new Pais();
+            alumnoDireccion.Direccion.Colonia.Municipio.Estado.Pais.setIdPais(direccionJPA.Colonia.Municipio.Estado.Pais.getIdPais());
+            alumnoDireccion.Direccion.Colonia.Municipio.Estado.Pais.setNombre(direccionJPA.Colonia.Municipio.Estado.Pais.getNombre());
+        } catch (Exception ex) {
+            
+        
+        }
+        
+        result.Object = alumnoDireccion;
+        
+        return result;
+    }
 }

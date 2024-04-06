@@ -76,9 +76,10 @@ public class AlumnoController {
 
             model.addAttribute("alumnoDireccion", alumnoDireccion);  //modelo vacio cuando hacemos un ADD
         } else {
+            
             // Alumno alumnoRecuperado = alumnoDAOImplementation.GetById(idalumno);
             //model.addAttribute("alumno", alumnoRecuperado);
-            AlumnoDireccion alumnoDireccion = (AlumnoDireccion) alumnoDAOImplementation.GetByIdSP(idalumno).Object;
+            AlumnoDireccion alumnoDireccion = (AlumnoDireccion) alumnoDAOImplementation.GetByIdJPA(idalumno).Object;
             model.addAttribute("alumnoDireccion", alumnoDireccion);
         }
 

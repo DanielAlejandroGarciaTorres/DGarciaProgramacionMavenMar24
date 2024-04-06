@@ -108,9 +108,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="col-md-6 "> 
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1"><i class="bi bi-journal-bookmark-fill"></i></span>
+                            <!--th if select para cuando vengan vacios-->
                             <select class="form-select" aria-label="Default select example" id="ddlEstado" th:field="*{Direccion.Colonia.Municipio.Estado.IdEstado}">
                                 <option value="0">Seleccione un estado</option>
                             </select>
+                            <!--th unless para cuando venga lleno por update-->
                         </div>
                     </div>
                 </div>
