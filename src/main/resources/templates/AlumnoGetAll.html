@@ -25,6 +25,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <table class='table table-responsive table-bordered'>
                 <thead class="table-dark">
                     <th>Actualizar</th>
+                    <td>Imagen</td>
                     <th>Nombre</th>
                     <th>Username</th>
                     <th>Rol</th>
@@ -34,6 +35,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <tbody>
                     <tr th:each="alumnoDireccion: ${alumnosDireccion}">
                         <td><a th:href="@{/alumno/form/{idalumno}(idalumno=${alumnoDireccion.Alumno.IdAlumno})}" class="btn btn-warning"><i class="bi bi-pencil-square"></i></a></td>
+                        <td>
+                            <img th:if="${alumnoDireccion.Alumno.Imagen != '' and alumnoDireccion.Alumno.Imagen != null}" th:src="'data:image/png;base64,' + ${alumnoDireccion.Alumno.Imagen}">
+                            <img th:unless="${alumnoDireccion.Alumno.Imagen != '' and alumnoDireccion.Alumno.Imagen != null}" th:src="@{/image/defaut-img.jpg}">
+                        </td>
                         <td th:text="${alumnoDireccion.Alumno.Nombre} + ' ' + ${alumnoDireccion.Alumno.ApellidoPaterno}"></td>
                         <td th:text="${alumnoDireccion.Alumno.UserName}"></td>
                         <td th:text="${alumnoDireccion.Alumno.Rol.IdRol}"></td>

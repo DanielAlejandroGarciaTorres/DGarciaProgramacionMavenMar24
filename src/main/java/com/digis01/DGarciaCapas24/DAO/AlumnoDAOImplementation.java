@@ -195,6 +195,7 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
             alumnoDireccion.Alumno.setFechaNacimiento(alumno.getFechaNacimiento());
             alumnoDireccion.Alumno.Rol = new Rol();
             alumnoDireccion.Alumno.Rol.setIdRol(alumno.Rol.getIdRol());
+            alumnoDireccion.Alumno.setImagen(alumno.getImagen());
 
             TypedQuery<com.digis01.DGarciaCapas24.JPA.Direccion> query = entityManager.createQuery("FROM Direccion WHERE Alumno.IdAlumno =: idAlumno", com.digis01.DGarciaCapas24.JPA.Direccion.class);
             query.setParameter("idAlumno", alumno.getIdAlumno());
