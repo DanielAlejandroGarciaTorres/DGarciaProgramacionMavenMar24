@@ -17,6 +17,7 @@ import com.digis01.DGarciaCapas24.ML.Pais;
 import com.digis01.DGarciaCapas24.ML.Result;
 import com.digis01.DGarciaCapas24.ML.Rol;
 import java.util.List;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -81,14 +83,25 @@ public class AlumnoController {
             //model.addAttribute("alumno", alumnoRecuperado);
             AlumnoDireccion alumnoDireccion = (AlumnoDireccion) alumnoDAOImplementation.GetByIdJPA(idalumno).Object;
             model.addAttribute("alumnoDireccion", alumnoDireccion);
+            model.addAttribute("Estados", (List<Estado>) estadoDAOImplementation.GetByPais(alumnoDireccion.Direccion.Colonia.Municipio.Estado.Pais.getIdPais()).Object);
         }
 
         return "Form";
     }
 
     @PostMapping("/form")  //Recuperar los datos de formulario
-    public String Form(@ModelAttribute AlumnoDireccion alumnoDireccion) {
+    public String Form(@ModelAttribute AlumnoDireccion alumnoDireccion, @RequestParam("imagenFile") MultipartFile imagenFile) {
         Result result;
+       
+        try {
+            if(!imagenFile.isEmpty()) {
+                byte[] bytes = imagenFile.getBytes();
+                String imageBase64 = Base64.encodeBase64String(bytes);
+                alumnoDireccion.Alumno.setImagen(imageBase64);
+            }
+        } catch (Exception ex) {
+            
+        }        
         if (alumnoDireccion.Alumno.getIdAlumno() == 0) { // INSERTAR DATOS
             //          alumnoDAOImplementation.Add(alumno);  //EL metodo de Add a la BD
 //            result = alumnoDAOImplementation.AddSP(alumnoDireccion);

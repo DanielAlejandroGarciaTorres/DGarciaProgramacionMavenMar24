@@ -243,6 +243,8 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
         alumno.Rol = new com.digis01.DGarciaCapas24.JPA.Rol();
         alumno.Rol.setIdRol(alumnoDireccion.Alumno.Rol.getIdRol());
         alumno.setFechaNacimiento(alumnoDireccion.Alumno.getFechaNacimiento());
+        alumno.setImagen(alumnoDireccion.Alumno.getImagen());
+//        alumno.setImagen(null);
 
         entityManager.persist(alumno);
 

@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,6 +44,10 @@ public class Alumno {
     @Column(name = "fechanacimiento")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
+    
+    @Lob
+    @Column( name = "Imagen")
+    private String Imagen;
 
     public Alumno() {
 
@@ -115,4 +120,14 @@ public class Alumno {
     public void setRol(Rol Rol) {
         this.Rol = Rol;
     }
+
+    public String getImagen() {
+        return Imagen;
+    }
+
+    public void setImagen(String Imagen) {
+        this.Imagen = Imagen;
+    }
+    
+    
 }
