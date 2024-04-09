@@ -4,6 +4,8 @@
  */
 package com.digis01.DGarciaCapas24.ML;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +16,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Alumno {
 
     private int IdAlumno;
+    @NotEmpty(message = "El nombre es obligatorio")
+    @Size(min = 3, max = 5, message = "Cadena entre 3 y 5")
     private String Nombre;
     private String ApellidoPaterno;
     private String UserName;

@@ -4,12 +4,16 @@
  */
 package com.digis01.DGarciaCapas24.ML;
 
+import jakarta.validation.Valid;
+
 /**
  *
  * @author ALIEN 34
  */
 public class AlumnoDireccion {
+    @Valid
     public Alumno Alumno;
+    @Valid
     public Direccion Direccion;
 
     

@@ -16,11 +16,13 @@ import com.digis01.DGarciaCapas24.ML.Estado;
 import com.digis01.DGarciaCapas24.ML.Pais;
 import com.digis01.DGarciaCapas24.ML.Result;
 import com.digis01.DGarciaCapas24.ML.Rol;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,10 +92,19 @@ public class AlumnoController {
     }
 
     @PostMapping("/form")  //Recuperar los datos de formulario
-    public String Form(@ModelAttribute AlumnoDireccion alumnoDireccion, @RequestParam("imagenFile") MultipartFile imagenFile) {
+    public String Form(@Valid @ModelAttribute AlumnoDireccion alumnoDireccion,
+            BindingResult bindingeResult,
+            @RequestParam("imagenFile") MultipartFile imagenFile,
+            Model model) {
+
         Result result;
        
-        try {
+        
+        if (bindingeResult.hasErrors()) {
+            model.addAttribute("alumnoDireccion", alumnoDireccion);
+            return "Form";
+        } else {
+            try {
             if(!imagenFile.isEmpty()) {
                 byte[] bytes = imagenFile.getBytes();
                 String imageBase64 = Base64.encodeBase64String(bytes);
@@ -113,6 +124,7 @@ public class AlumnoController {
         }
 
         return "AlumnoGetAll";
+        }       
     }
 
     @GetMapping("/getEstadoByPais")

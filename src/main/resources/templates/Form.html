@@ -37,8 +37,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <label for="NombreAlumno" class="form-label">Nombre</label>
                         <div class="input-group ">
                             <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"></i></span>
-                            <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Alumno.Nombre}" onKeyPress="return ValidateAlpha(event);" required >
-                        </div>     
+                            <input id="NombreAlumno" type="text" class="form-control" placeholder="Nombre" th:field="*{Alumno.Nombre}" onKeyPress="return sololetras(event, 'errorMessageNombre');" >
+                        </div>  
+                        <span id="errorMessageNombre" class="text-danger"></span>
+                        <label class="text-danger" th:if="${#fields.hasErrors('Alumno.Nombre')}" th:errors="*{Alumno.Nombre}"></label>
                     </div>
                     <div class="col-md-6">
                         <label for="ApellidoPaternoAlumno" class="form-label">Apellido Paterno</label>
@@ -167,6 +169,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 //        }
 //    }
 
+    function sololetras(event, span){
+        var regex = /^[a-zA-Z]+$/;
+        var key = event.key;
+        var mensaje = document.getElementById(span); // errorMessageNombre
+        if(key.match(regex)) {
+            mensaje.innerHTML = "";
+            return true;
+        } else {
+            mensaje.innerHTML = "Solo letras";
+            return false;
+        }
+    }
+    
     function ValidateAlpha(evt)
     {
         var keyCode = (evt.which) ? evt.which : evt.keyCode
