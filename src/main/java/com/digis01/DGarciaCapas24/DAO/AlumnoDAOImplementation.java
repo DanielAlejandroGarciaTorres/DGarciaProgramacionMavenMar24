@@ -341,4 +341,23 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
         
         return result;
     }
+
+    @Override
+    public Result GetByUserName(String UserName, String Password) { // Usuario usuario 
+        Result result = new Result();
+        
+        //TypedQuery -- From Usuario Where UserName =: UserNameBusqueda
+        // usuarioJPA -- > singleResult {id, nombre, apellidoPaterno, ...}
+        
+        
+        // SI UsuarioJPA.UserName = UserName
+            // SI UduarioJPA.Password = Password
+                // result.Correct = true
+            // SINO
+                //  result.Correct = false
+        //SINO
+            // result.Correct = false
+            
+        return result;
+    }
 }

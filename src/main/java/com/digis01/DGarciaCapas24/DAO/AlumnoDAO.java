@@ -27,4 +27,5 @@ public interface AlumnoDAO { // Contrato
     Result AddJPA(AlumnoDireccion alumnoDireccion);
     Result UpdateJPA(AlumnoDireccion alumnoDireccion);
     Result GetByIdJPA(int idAlumno);
+    Result GetByUserName(String UserName, String Password);
 }
