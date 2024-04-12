@@ -18,6 +18,35 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
         <h1 class='text-center'>Listado de Alumnos</h1>
         <br>
+
+        <form th:action="@{/alumno}" method="POST" th:object="${alumnoBusqueda}">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="Nombre" class="form-label">Nombre</label>
+                    <div class="input-group ">
+                        <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"></i></span>
+                        <input id="Nombre" type="text" class="form-control" placeholder="Nombre" th:field="*{Nombre}" >
+                    </div>  
+                </div>
+                <div class="col-md-4">
+                    <label for="ApellidoPaterno" class="form-label">Apellido Paterno</label>
+                    <div class="input-group ">
+                        <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"></i></span>
+                        <input id="ApellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}" >
+                    </div>  
+                </div>
+                <div class="col-md-4">
+                    <label for="ApellidoMaterno" class="form-label">ApellidoMaterno</label>
+                    <div class="input-group ">
+                        <span class="input-group-text" id="basic-addon1"><i class="bi bi-person-fill"></i></span>
+                        <input id="ApellidoMaterno" type="text" class="form-control" placeholder="Apellido Materno" >
+                    </div>  
+                </div>
+            </div>
+            <button  class="btn btn-success"> Buscar</button>
+        </form>
+
+
         <a th:href="@{/alumno/form/{idalumno}(idalumno=0)}" class="btn btn-success">Agregar</a>
         <hr>
         <div class='container'>

@@ -4,6 +4,7 @@
  */
 package com.digis01.DGarciaCapas24.DAO;
 
+import com.digis01.DGarciaCapas24.ML.Alumno;
 import com.digis01.DGarciaCapas24.ML.AlumnoDireccion;
 import com.digis01.DGarciaCapas24.ML.Result;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface AlumnoDAO { // Contrato
     Result UpdateSP(AlumnoDireccion alumnoDireccion);
     Result GetByIdSP(int idAlumno);
     
-    Result GetAllJPA();
+    Result GetAllJPA(Alumno alumno);
     Result AddJPA(AlumnoDireccion alumnoDireccion);
     Result UpdateJPA(AlumnoDireccion alumnoDireccion);
     Result GetByIdJPA(int idAlumno);

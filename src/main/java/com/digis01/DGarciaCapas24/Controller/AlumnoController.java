@@ -52,8 +52,9 @@ public class AlumnoController {
     @GetMapping  //--Obtener/Mostrar una vista
     public String GetAll(Model model) {
 //        Result result = alumnoDAOImplementation.GetAllSP();
-        Result result = alumnoDAOImplementation.GetAllJPA();
+        Result result = alumnoDAOImplementation.GetAllJPA(new Alumno("", ""));
         if (result.Correct) {
+            model.addAttribute("alumnoBusqueda", new Alumno());
             model.addAttribute("alumnosDireccion", (List<AlumnoDireccion>) result.Object);
             return "AlumnoGetAll";
         } else {
@@ -61,7 +62,22 @@ public class AlumnoController {
         }
 
     }
-
+    
+    @PostMapping
+    public String GetAll(@ModelAttribute Alumno alumnoBusqueda, Model model){
+        Result result = alumnoDAOImplementation.GetAllJPA(alumnoBusqueda);
+        
+        if (result.Correct) {
+            model.addAttribute("alumnoBusqueda", new Alumno());
+            model.addAttribute("alumnosDireccion", (List<AlumnoDireccion>) result.Object);
+            return "AlumnoGetAll";
+        } else {
+            return "";
+        }
+        
+    }
+    
+    
     //john carlos nancy mariano marco axel gerardo
     @GetMapping("/form/{idalumno}") //Muestra formulario vacio
     public String Form(@PathVariable int idalumno, Model model) {

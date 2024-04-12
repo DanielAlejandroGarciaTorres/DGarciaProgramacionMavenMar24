@@ -179,10 +179,16 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
     }
 
     @Override
-    public Result GetAllJPA() {
+    public Result GetAllJPA(Alumno alumnoBusqueda) {
         //JPQL
         Result result = new Result();
-        List<com.digis01.DGarciaCapas24.JPA.Alumno> alumnos = entityManager.createQuery("FROM Alumno", com.digis01.DGarciaCapas24.JPA.Alumno.class).getResultList();
+        
+        TypedQuery<com.digis01.DGarciaCapas24.JPA.Alumno> query = entityManager.createQuery("FROM Alumno WHERE "
+                + "UPPER(Nombre) LIKE UPPER(:NombreAlumno)", com.digis01.DGarciaCapas24.JPA.Alumno.class);
+        
+        query.setParameter("NombreAlumno", "%" + alumnoBusqueda.getNombre() + "%");
+        
+        List<com.digis01.DGarciaCapas24.JPA.Alumno> alumnos = query.getResultList();
         List<AlumnoDireccion> alumnosDireccion = new ArrayList<>();
 
         for (com.digis01.DGarciaCapas24.JPA.Alumno alumno : alumnos) {
@@ -197,11 +203,11 @@ public class AlumnoDAOImplementation implements AlumnoDAO {
             alumnoDireccion.Alumno.Rol.setIdRol(alumno.Rol.getIdRol());
             alumnoDireccion.Alumno.setImagen(alumno.getImagen());
 
-            TypedQuery<com.digis01.DGarciaCapas24.JPA.Direccion> query = entityManager.createQuery("FROM Direccion WHERE Alumno.IdAlumno =: idAlumno", com.digis01.DGarciaCapas24.JPA.Direccion.class);
-            query.setParameter("idAlumno", alumno.getIdAlumno());
+            TypedQuery<com.digis01.DGarciaCapas24.JPA.Direccion> queryDireccion = entityManager.createQuery("FROM Direccion WHERE Alumno.IdAlumno =: idAlumno", com.digis01.DGarciaCapas24.JPA.Direccion.class);
+            queryDireccion.setParameter("idAlumno", alumno.getIdAlumno());
 
             try {
-                com.digis01.DGarciaCapas24.JPA.Direccion direccion = query.getSingleResult();
+                com.digis01.DGarciaCapas24.JPA.Direccion direccion = queryDireccion.getSingleResult();
                 alumnoDireccion.Direccion = new Direccion();
                 alumnoDireccion.Direccion.setIdDIreccion(direccion.getIdDireccion());
                 alumnoDireccion.Direccion.setCalle(direccion.getCalle());
