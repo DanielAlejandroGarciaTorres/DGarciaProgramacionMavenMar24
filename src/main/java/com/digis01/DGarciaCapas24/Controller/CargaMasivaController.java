@@ -9,7 +9,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +57,25 @@ public class CargaMasivaController {
     }
    
     @PostMapping("/excel")
-    public String CargaMasivaExcel(){
+    public String CargaMasivaExcel(@RequestParam MultipartFile archivoExcel) throws IOException{
+        
+        if (archivoExcel != null && !archivoExcel.isEmpty()) {
+            String extension = StringUtils.getFilenameExtension(archivoExcel.getOriginalFilename());
+            if(extension.equals("xlsx")){
+                List<Alumno> alumnos = new ArrayList<>();
+                XSSFWorkbook workbook = new XSSFWorkbook(archivoExcel.getInputStream());
+                Sheet workSheet = workbook.getSheetAt(0);
+                for (Row row : workSheet) {
+                    Alumno alumno = new Alumno();
+                    alumno.setNombre(row.getCell(0).toString());
+                    
+                    alumnos.add(alumno);
+                }
+                
+                workbook.close();
+            }
+        }
+        
         return "";
     }
 }
