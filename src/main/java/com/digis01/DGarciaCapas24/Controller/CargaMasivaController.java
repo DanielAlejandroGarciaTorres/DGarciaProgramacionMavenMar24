@@ -6,6 +6,7 @@ package com.digis01.DGarciaCapas24.Controller;
 
 import com.digis01.DGarciaCapas24.ML.Alumno;
 import com.digis01.DGarciaCapas24.ML.ResultExcel;
+import jakarta.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,7 +63,7 @@ public class CargaMasivaController {
     }
 
     @PostMapping("/excel")
-    public String CargaMasivaExcel(@RequestParam MultipartFile archivoExcel) throws IOException {
+    public String CargaMasivaExcel(@RequestParam MultipartFile archivoExcel, HttpSession session, Model model) throws IOException {
         if (archivoExcel != null && !archivoExcel.isEmpty()) {
             String extension = StringUtils.getFilenameExtension(archivoExcel.getOriginalFilename());
             if (extension.equals("xlsx")) {
@@ -72,8 +74,17 @@ public class CargaMasivaController {
                 String absolutePath = root + "/" + path + fecha + fileName;
                 archivoExcel.transferTo(new File(absolutePath));
                 List<Alumno> alumnos = LecturaArchivo(archivoExcel);
+                
                 if(!alumnos.isEmpty()){
                     List<ResultExcel> resultExcel = ValidarExcel(alumnos); 
+                    if(!resultExcel.isEmpty()){
+                        model.addAttribute("errores", resultExcel);
+                        //generar una tabla de errores 
+                    } else {
+                        session.setAttribute("path", absolutePath);
+                        // activa boton de procesar.
+                    }
+                    return "CargaMasiva";
                 }
                 
             } else {
@@ -83,6 +94,17 @@ public class CargaMasivaController {
             return null; // no hay archivo o el archivo esta vacio
         }
         return "";
+    }
+    
+    //cuando el archivo sea correcto y precionen procesar
+    @PostMapping("/procesar")
+    public String CargaMasivaProcesar(HttpSession session){
+        String path = session.getAttribute("path").toString();
+        //lean 
+        // foreach alumno
+            // insertarlo con JPA
+        //limpiar session / cerrar
+        return "redirect: /alumno";
     }
     
 
@@ -114,7 +136,11 @@ public class CargaMasivaController {
             }
             // apellido
             // username
-            errores.add(new ResultExcel(fila, errorMessage));
+            
+            if (!errorMessage.equals("")){
+                errores.add(new ResultExcel(fila, errorMessage));
+            }
+            
             errorMessage = "";
             fila++;
         }
